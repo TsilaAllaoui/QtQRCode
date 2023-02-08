@@ -85,6 +85,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="insert.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="qtqrcode.cpp" />
   </ItemGroup>
@@ -92,10 +93,14 @@
     <QtMoc Include="qtqrcode.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="insert.ui" />
     <QtUic Include="qtqrcode.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="qtqrcode.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="insert.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

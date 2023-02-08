@@ -1,5 +1,6 @@
-#include "qtqrcode.h"
 #include <QtSql>
+
+#include "qtqrcode.h"
 
 QtQRCode::QtQRCode(QWidget *parent)
 	: QMainWindow(parent)
@@ -11,11 +12,21 @@ QtQRCode::QtQRCode(QWidget *parent)
 	ui.statusValueLabel->setText("Disconnected");
 	ui.statusValueLabel->setStyleSheet("color: red;");
 
+	// Setting default parameters
+	ui.dbText->setText("products");
+	ui.ipText->setText("localhost");
+	ui.tableText->setText("items");
+
 	// Set username as root by default
 	ui.usernameText->setText("root");
 
 	// Making cell width dynamic
 	ui.tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+	// Instantiating form widget
+	insert = new Insert();
+	insert->hide();
+
 }
 
 void QtQRCode::on_loginButton_clicked()
@@ -24,14 +35,14 @@ void QtQRCode::on_loginButton_clicked()
 	QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
 
 	// Opening database at localhost
-	db.setDatabaseName("products");
-	db.setHostName("localhost");
+	db.setDatabaseName(ui.dbText->text());
+	db.setHostName(ui.ipText->text());
 
 	// Credentials
 	db.setUserName(ui.usernameText->text());
 	db.setPassword(ui.passwordText->text());
 
-	// If connexion is successful
+	// If connexion is failed
 	if (!db.open())
 	{
 		ui.statusValueLabel->setText("Connection Error.");
@@ -40,7 +51,7 @@ void QtQRCode::on_loginButton_clicked()
 		isConnected = false;
 	}
 
-	// If connexion is failed
+	// If connexion is successful
 	else
 	{
 		ui.statusValueLabel->setText("Connection Successful.");
@@ -54,7 +65,7 @@ void QtQRCode::on_refreshButton_clicked()
 {
 	// Getting items table
 	QSqlTableModel model;
-	model.setTable("items");
+	model.setTable(ui.tableText->text());
 	model.select();
 
 	// Setting row and column counts
@@ -62,9 +73,12 @@ void QtQRCode::on_refreshButton_clicked()
 	ui.tableWidget->setColumnCount(model.columnCount());
 
 	// Getting table headers
-	std::vector<QString> headers;
-	for (int i=0; i<ui.tableWidget->columnCount(); i++)
-		headers.emplace_back(model.record().fieldName(i));
+	QStringList headers;
+	for (int i = 0; i < ui.tableWidget->columnCount(); i++)
+		headers.append(model.record().fieldName(i));
+
+	// Setting table widget headers
+	ui.tableWidget->setHorizontalHeaderLabels(headers);
 
 	// Fetching data from table and show in widget
 	for (int i = 0; i < model.rowCount(); ++i) 
@@ -78,5 +92,12 @@ void QtQRCode::on_refreshButton_clicked()
 			j++;
 		}
 	}
+}
+
+void QtQRCode::on_insertButton_clicked()
+{
+	// Show form widget
+	if (insert->isHidden())
+		insert->show();
 }
 

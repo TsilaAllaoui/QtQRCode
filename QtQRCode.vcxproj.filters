@@ -31,14 +31,23 @@
     <ClCompile Include="qtqrcode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="insert.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="qtqrcode.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="insert.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="qtqrcode.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="insert.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
