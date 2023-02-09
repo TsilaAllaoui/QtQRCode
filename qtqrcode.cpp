@@ -20,19 +20,14 @@ QtQRCode::QtQRCode(QWidget *parent)
 	// Set username as root by default
 	ui.usernameText->setText("root");
 
-	// Making cell width dynamic
-	ui.tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-
-	// Instantiating form widget
-	insert = new Insert();
-	insert->hide();
-
+	// Instanciating attributes
+	model = new QSqlTableModel;
 }
 
 void QtQRCode::on_loginButton_clicked()
 {
 	// Creating connection to database
-	QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+	db = QSqlDatabase::addDatabase("QMYSQL");
 
 	// Opening database at localhost
 	db.setDatabaseName(ui.dbText->text());
@@ -64,40 +59,20 @@ void QtQRCode::on_loginButton_clicked()
 void QtQRCode::on_refreshButton_clicked()
 {
 	// Getting items table
-	QSqlTableModel model;
-	model.setTable(ui.tableText->text());
-	model.select();
+	model = new QSqlTableModel(nullptr, db);
+	model->setTable(ui.tableText->text());
+	model->select();
 
-	// Setting row and column counts
-	ui.tableWidget->setRowCount(model.rowCount());
-	ui.tableWidget->setColumnCount(model.columnCount());
-
-	// Getting table headers
-	QStringList headers;
-	for (int i = 0; i < ui.tableWidget->columnCount(); i++)
-		headers.append(model.record().fieldName(i));
-
-	// Setting table widget headers
-	ui.tableWidget->setHorizontalHeaderLabels(headers);
-
-	// Fetching data from table and show in widget
-	for (int i = 0; i < model.rowCount(); ++i) 
-	{
-		int j = 0;
-		for (auto& header : headers)
-		{
-			QString value = model.record(i).value(header).toString();
-			QTableWidgetItem* item = new QTableWidgetItem(value);
-			ui.tableWidget->setItem(i, j, item);
-			j++;
-		}
-	}
+	// Showing table contents
+	ui.tableView->setModel(model);
 }
 
 void QtQRCode::on_insertButton_clicked()
 {
+	// Creating insert widget
+	insert = new Insert(model);
+
 	// Show form widget
-	if (insert->isHidden())
-		insert->show();
+	insert->show();
 }
 

@@ -3,6 +3,7 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_qtqrcode.h"
 #include "insert.h"
+#include <QSqlDatabase>
 
 class QtQRCode : public QMainWindow
 {
@@ -15,6 +16,8 @@ class QtQRCode : public QMainWindow
 	private:
 		Ui::QtQRCodeClass ui;
 		bool isConnected;
+		QSqlDatabase db;
+		QSqlTableModel* model;
 
 	private slots:
 		void on_loginButton_clicked();
